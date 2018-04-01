@@ -5,6 +5,7 @@ module Types
   , Game (..)
   , Input
   , Position
+  , toGameElement
   ) where
 
 import Data.List (intersperse)
@@ -25,6 +26,15 @@ instance Show Element where
   show BoxOnGoal    = "*"
   show Goal         = "."
   show Floor        = " "
+
+toGameElement :: Char -> Element
+toGameElement '#' = Wall
+toGameElement '@' = Player
+toGameElement '+' = PlayerOnGoal
+toGameElement '$' = Box
+toGameElement '*' = BoxOnGoal
+toGameElement '.' = Goal
+toGameElement ' ' = Floor
 
 type Line = [Element]
 
