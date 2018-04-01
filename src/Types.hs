@@ -3,7 +3,7 @@ module Types
   , Line
   , Board
   , Game (..)
-  , Input
+  , Direction
   , Position
   , Terminals (..)
   , toGameElement
@@ -68,7 +68,7 @@ instance Show Game where
       -- [[Wall, Wall]] -> [["#", "#"]] -> [["##"]]
       board' = concatMap show <$> currentBoard game
 
-type Input = String
+type Direction = String
 
 type Position = (Int, Int)
 

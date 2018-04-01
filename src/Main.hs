@@ -6,7 +6,7 @@ import Types
   , Board
   , Game (..)
   , Position
-  , Input
+  , Direction
   , toGameElement
   , Terminals (..)
   )
@@ -68,7 +68,7 @@ play g = do
     "q" -> Stopped
     "r" -> Restarted
     _   -> handleMovement input g
-    
+
 
 getValidPlayerInput :: IO String
 getValidPlayerInput = do
@@ -77,10 +77,10 @@ getValidPlayerInput = do
     then pure input
     else putStrLn "invalid, please try again" >> getValidPlayerInput
 
-isValidInput :: Input -> Bool
+isValidInput :: String -> Bool
 isValidInput i = i `elem` ["w", "s", "a", "d", "q", "r"]
 
-getElement :: Position -> Input -> Board -> Element
+getElement :: Position -> Direction -> Board -> Element
 getElement (line, col) "u" board = (board !! (line - 1)) !! col -- ^ previous line, same col
 getElement (line, col) "d" board = (board !! (line + 1)) !! col -- ^ next line, same col
 getElement (line, col) "l" board = (board !! line) !! (col - 1)
