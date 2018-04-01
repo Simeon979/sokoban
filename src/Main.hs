@@ -41,14 +41,14 @@ readRest left | null left = []
 
 
 runGame :: [Board] -> IO ()
-runGame [] = putStrLn "No more levels"
+runGame []       = putStrLn "No more levels"
 runGame l@(x:xs) = do
   let level = initLevel x
   status <- play level
   case status of
-    Solved -> runGame xs
+    Solved    -> runGame xs
     Restarted -> runGame l
-    Stopped -> putStrLn "Stopped"
+    Stopped   -> putStrLn "Stopped"
 
 initLevel :: Board -> Game
 initLevel board = Game {currentBoard = board, playerPosition = go 0 board}
@@ -62,17 +62,23 @@ initLevel board = Game {currentBoard = board, playerPosition = go 0 board}
   findCol = fromJust . findIndex (\e -> e == Player || e == PlayerOnGoal)
 
 play :: Game -> IO Terminals
-play = undefined
+play g = do
+  input <- getValidPlayerInput
+  pure $ case input of
+    "q" -> Stopped
+    "r" -> Restarted
+    _   -> handleMovement input g
+    
 
-getPlayerInput :: IO String
-getPlayerInput = do
+getValidPlayerInput :: IO String
+getValidPlayerInput = do
   input <- getLine
   if isValidInput input
     then pure input
-    else putStrLn "invalid, please try again" >> getPlayerInput
+    else putStrLn "invalid, please try again" >> getValidPlayerInput
 
 isValidInput :: Input -> Bool
-isValidInput i = i `elem` ["u", "d", "l", "r"]
+isValidInput i = i `elem` ["w", "s", "a", "d", "q", "r"]
 
 getElement :: Position -> Input -> Board -> Element
 getElement (line, col) "u" board = (board !! (line - 1)) !! col -- ^ previous line, same col
@@ -80,4 +86,5 @@ getElement (line, col) "d" board = (board !! (line + 1)) !! col -- ^ next line, 
 getElement (line, col) "l" board = (board !! line) !! (col - 1)
 getElement (line, col) "r" board = (board !! line) !! (col + 1)
 
-
+handleMovement :: String -> Game -> Terminals
+handleMovement = undefined
