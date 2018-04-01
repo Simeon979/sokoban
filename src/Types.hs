@@ -5,6 +5,7 @@ module Types
   , Game (..)
   , Input
   , Position
+  , Terminals (..)
   , toGameElement
   ) where
 
@@ -70,3 +71,5 @@ instance Show Game where
 type Input = String
 
 type Position = (Int, Int)
+
+data Terminals = Solved | Stopped | Restarted
