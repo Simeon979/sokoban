@@ -7,6 +7,8 @@ import Types
   , Game (..)
   , Position
   , Input
+  , toGameElement
+  , Terminals (..)
   )
 
 import Data.Bool (bool)
@@ -16,17 +18,7 @@ import Data.Maybe (fromJust)
 import Control.Monad (guard)
 
 main :: IO ()
-main = do
-  putStrLn "hello world"
-
-toGameElement :: Char -> Element
-toGameElement '#' = Wall
-toGameElement '@' = Player
-toGameElement '+' = PlayerOnGoal
-toGameElement '$' = Box
-toGameElement '*' = BoxOnGoal
-toGameElement '.' = Goal
-toGameElement ' ' = Floor
+main = allLevels >>= runGame
 
 allLevels :: IO [Board]
 allLevels = do
@@ -48,6 +40,16 @@ readRest left | null left = []
               | otherwise = read' . tail . dropWhile (/= "\r") $ left
 
 
+runGame :: [Board] -> IO ()
+runGame [] = putStrLn "No more levels"
+runGame l@(x:xs) = do
+  let level = initLevel x
+  status <- play level
+  case status of
+    Solved -> runGame xs
+    Restarted -> runGame l
+    Stopped -> putStrLn "Stopped"
+
 initLevel :: Board -> Game
 initLevel board = Game {currentBoard = board, playerPosition = go 0 board}
  where
@@ -59,11 +61,8 @@ initLevel board = Game {currentBoard = board, playerPosition = go 0 board}
     else go (index + 1) xs
   findCol = fromJust . findIndex (\e -> e == Player || e == PlayerOnGoal)
 
-play :: Game -> IO ()
-play game = do
-  input    <- getPlayerInput
-  newState <- move input (playerPosition game) (currentBoard game)
-  pure ()
+play :: Game -> IO Terminals
+play = undefined
 
 getPlayerInput :: IO String
 getPlayerInput = do
@@ -74,9 +73,6 @@ getPlayerInput = do
 
 isValidInput :: Input -> Bool
 isValidInput i = i `elem` ["u", "d", "l", "r"]
-
-move :: Monad m => Input -> Position -> Board -> m Game
-move = undefined
 
 getElement :: Position -> Input -> Board -> Element
 getElement (line, col) "u" board = (board !! (line - 1)) !! col -- ^ previous line, same col
