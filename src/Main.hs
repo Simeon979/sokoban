@@ -64,11 +64,12 @@ initLevel board = Game {currentBoard = board, playerPosition = go 0 board}
 play :: Game -> IO Terminals
 play g = do
   input <- getValidPlayerInput
-  pure $ case input of
-    "q" -> Stopped
-    "r" -> Restarted
-    _   -> handleMovement input g
-
+  case input of
+    "q" -> pure Stopped
+    "r" -> pure Restarted
+    dir ->
+      let newState = handleMovement dir g
+      in  if checkGameSolved newState then pure Solved else play newState
 
 getValidPlayerInput :: IO String
 getValidPlayerInput = do
@@ -80,11 +81,50 @@ getValidPlayerInput = do
 isValidInput :: String -> Bool
 isValidInput i = i `elem` ["w", "s", "a", "d", "q", "r"]
 
-getElement :: Position -> Direction -> Board -> Element
-getElement (line, col) "u" board = (board !! (line - 1)) !! col -- ^ previous line, same col
-getElement (line, col) "d" board = (board !! (line + 1)) !! col -- ^ next line, same col
-getElement (line, col) "l" board = (board !! line) !! (col - 1)
-getElement (line, col) "r" board = (board !! line) !! (col + 1)
+getElement :: Position -> Board -> Element
+getElement (row, col) board = (board !! row) !! col
 
-handleMovement :: String -> Game -> Terminals
-handleMovement = undefined
+handleMovement :: Direction -> Game -> Game
+handleMovement dir game | isEmpty dir game    = walk dir game
+                        | isPushable dir game = push dir game
+                        | otherwise           = game
+
+isEmpty :: Direction -> Game -> Bool
+isEmpty dir game =
+  let board  = currentBoard game
+      pos    = playerPosition game
+      newPos = advance pos dir
+  in  isEmptyElement $ getElement newPos board
+isPushable :: Direction -> Game -> Bool
+isPushable dir game =
+  let board   = currentBoard game
+      pos     = playerPosition game
+      newPos1 = advance pos dir -- new position of player after pushing
+      e1      = getElement newPos1 board
+      newPos2 = advance newPos1 dir -- new position of box after pushing
+      e2      = getElement newPos2 board
+  in  isBoxElement e1 && isEmptyElement e2
+
+isPlayerElement :: Element -> Bool
+isPlayerElement e = e == Player || e == PlayerOnGoal
+
+isEmptyElement :: Element -> Bool
+isEmptyElement e = e == Floor || e == Goal
+
+isBoxElement :: Element -> Bool
+isBoxElement e = e == Box || e == BoxOnGoal
+
+advance :: Position -> Direction -> Position
+advance (r, c) "u" = (r - 1, c)
+advance (r, c) "d" = (r + 1, c)
+advance (r, c) "l" = (r, c - 1)
+advance (r, c) "r" = (r, c + 1)
+
+walk :: Direction -> Game -> Game
+walk = undefined
+
+push :: Direction -> Game -> Game
+push = undefined
+
+checkGameSolved :: Game -> Bool
+checkGameSolved = undefined
