@@ -118,6 +118,9 @@ isEmptyElement e = e == Floor || e == Goal
 isBoxElement :: Element -> Bool
 isBoxElement e = e == Box || e == BoxOnGoal
 
+isGoalElement :: Element -> Bool
+isGoalElement e = e == Goal || e == BoxOnGoal || e == PlayerOnGoal
+
 advance :: Position -> Direction -> Position
 advance (r, c) "w" = (r - 1, c)
 advance (r, c) "s" = (r + 1, c)
@@ -148,8 +151,34 @@ checkGameSolved :: Game -> Bool
 checkGameSolved game =
   let board = currentBoard game in and $ fmap (notElem Box) board
 
+updateAt :: Int -> a -> [a] -> [a]
+updateAt = go 0
+ where
+  go :: Int -> Int -> a -> [a] -> [a]
+  go _ _ _ []     = []
+  go m n y (x:xs) = if m == n then y : xs else x : go (m + 1) n y xs
+
 updateRow :: Element -> (Position, Position) -> Board -> Board
-updateRow = undefined
+updateRow e (a@(r, c), b@(r', c')) board =
+  let onGoal         = isGoalElement $ getElement a board
+      toGoal         = isGoalElement $ getElement b board
+      lineFrom       = board !! r
+      lineTo         = board !! r'
+      fElementOnGoal = if e == Player then PlayerOnGoal else BoxOnGoal
+      newLineFrom    = updateAt c (if onGoal then Goal else Floor) lineFrom
+      newLineTo      = updateAt c' (if toGoal then fElementOnGoal else e) lineTo
+      newBoard       = updateAt r' newLineTo . updateAt r newLineFrom $ board
+  in  newBoard
 
 updateCol :: Element -> (Position, Position) -> Board -> Board
-updateCol = undefined
+updateCol e (a@(r, c), b@(r', c')) board =
+  let onGoal         = isGoalElement $ getElement a board
+      toGoal         = isGoalElement $ getElement b board
+      fElementOnGoal = if e == Player then PlayerOnGoal else BoxOnGoal
+      oldLine        = board !! r
+      newLine =
+        updateAt c' (if toGoal then fElementOnGoal else e)
+          . updateAt c (if onGoal then Goal else Floor)
+          $ oldLine
+      newBoard = updateAt r newLine board
+  in  newBoard
