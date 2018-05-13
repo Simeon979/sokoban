@@ -145,7 +145,8 @@ walk e p dir game =
     in  walk Player pPosition dir afterBoxPushed
 
 checkGameSolved :: Game -> Bool
-checkGameSolved = undefined
+checkGameSolved game =
+  let board = currentBoard game in and $ fmap (notElem Box) board
 
 updateRow :: Element -> (Position, Position) -> Board -> Board
 updateRow = undefined
