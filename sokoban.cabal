@@ -2,12 +2,12 @@ name:                sokoban
 version:             0.1.0.0
 -- synopsis:
 -- description:
-homepage:            https://github.com/githubuser/sokoban#readme
+homepage:            https://github.com/simeon979/sokoban
 license:             BSD3
 license-file:        LICENSE
-author:              Author name here
-maintainer:          example@example.com
-copyright:           2018 Author name here
+author:              Simeon
+maintainer:          adegbolasimeon@gmail.com
+copyright:           2018 Simeon
 category:            Web
 build-type:          Simple
 cabal-version:       >=1.10
