@@ -118,10 +118,10 @@ isBoxElement :: Element -> Bool
 isBoxElement e = e == Box || e == BoxOnGoal
 
 advance :: Position -> Direction -> Position
-advance (r, c) "u" = (r - 1, c)
-advance (r, c) "d" = (r + 1, c)
-advance (r, c) "l" = (r, c - 1)
-advance (r, c) "r" = (r, c + 1)
+advance (r, c) "w" = (r - 1, c)
+advance (r, c) "s" = (r + 1, c)
+advance (r, c) "a" = (r, c - 1)
+advance (r, c) "d" = (r, c + 1)
 
 walk :: Direction -> Game -> Game
 walk = undefined
