@@ -46,7 +46,8 @@ runGame l@(x:xs) = do
   let level = initLevel x
   status <- play level
   case status of
-    Solved    -> runGame xs
+    Solved ->
+      putStrLn "\n\nYou Rock!!\nOn to the next one!!!\n\n" >> runGame xs
     Restarted -> runGame l
     Stopped   -> putStrLn "Stopped"
 
@@ -63,6 +64,8 @@ initLevel board = Game {currentBoard = board, playerPosition = go 0 board}
 
 play :: Game -> IO Terminals
 play g = do
+  print g >> putStrLn "\n"
+  putStr "Enter a direction: "
   input <- getValidPlayerInput
   case input of
     "q" -> pure Stopped
