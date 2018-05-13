@@ -137,12 +137,12 @@ walk e p dir game =
   -- ^ the player position is being changed no matter the element moved
   --   this is not a problem when moving a box because walk is called again to move the player
 
-  push :: Direction -> Game -> Game
-  push dir game =
-    let pPosition      = playerPosition game
-        boxPosition    = advance pPosition dir
-        afterBoxPushed = walk Box boxPosition dir game
-    in  walk Player pPosition dir afterBoxPushed
+push :: Direction -> Game -> Game
+push dir game =
+  let pPosition      = playerPosition game
+      boxPosition    = advance pPosition dir
+      afterBoxPushed = walk Box boxPosition dir game
+  in  walk Player pPosition dir afterBoxPushed
 
 checkGameSolved :: Game -> Bool
 checkGameSolved game =
