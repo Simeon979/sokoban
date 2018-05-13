@@ -88,9 +88,10 @@ getElement :: Position -> Board -> Element
 getElement (row, col) board = (board !! row) !! col
 
 handleMovement :: Direction -> Game -> Game
-handleMovement dir game | isEmpty dir game    = walk dir game
-                        | isPushable dir game = push dir game
-                        | otherwise           = game
+handleMovement dir game
+  | isEmpty dir game    = walk Player (playerPosition game) dir game
+  | isPushable dir game = push dir game
+  | otherwise           = game
 
 isEmpty :: Direction -> Game -> Bool
 isEmpty dir game =
@@ -123,7 +124,7 @@ advance (r, c) "s" = (r + 1, c)
 advance (r, c) "a" = (r, c - 1)
 advance (r, c) "d" = (r, c + 1)
 
-walk :: Direction -> Game -> Game
+walk :: Element -> Position -> Direction -> Game -> Game
 walk = undefined
 
 push :: Direction -> Game -> Game
