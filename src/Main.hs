@@ -124,11 +124,27 @@ advance (r, c) "s" = (r + 1, c)
 advance (r, c) "a" = (r, c - 1)
 advance (r, c) "d" = (r, c + 1)
 
+-- | Walk changes the position of a player or a box
 walk :: Element -> Position -> Direction -> Game -> Game
-walk = undefined
+walk e p dir game =
+  let curPosition@(r , c ) = p
+      nextPostion@(r', c') = advance curPosition dir
+      board                = currentBoard game
+      newBoard             = if c == c'
+        then updateRow e (curPosition, nextPostion) board -- ^ horizontal movement
+        else updateCol e (curPosition, nextPostion) board --   verical movement
+  in  Game {currentBoard = newBoard, playerPosition = nextPostion}
+  -- ^ the player position is being changed no matter the element moved
+  --   this is not a problem when moving a box because walk is called again to move the player
 
 push :: Direction -> Game -> Game
 push = undefined
 
 checkGameSolved :: Game -> Bool
 checkGameSolved = undefined
+
+updateRow :: Element -> (Position, Position) -> Board -> Board
+updateRow = undefined
+
+updateCol :: Element -> (Position, Position) -> Board -> Board
+updateCol = undefined
