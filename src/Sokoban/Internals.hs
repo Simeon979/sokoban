@@ -1,13 +1,4 @@
-module Types
-  ( Element (..)
-  , Line
-  , Board
-  , Game (..)
-  , Direction
-  , Position
-  , Terminals (..)
-  , toGameElement
-  ) where
+module Sokoban.Internals where
 
 import Data.List (intersperse)
 
@@ -41,24 +32,9 @@ type Line = [Element]
 
 type Board = [Line]
 
-
--- | each line on the board is a list of elements i.e
-{-  
-    #### ^-- line 1
-    #@.# ^-- line 2
-    #$ # ^-- line 3 etc
-    #  #
-    # $#
-    #. #
-    #  #
-    ####
-
-    the board is a list of lines
--}
-
-data Game = Game  { currentBoard :: Board,
-                    playerPosition :: (Int, Int)
-                  }
+data Game = Game { currentBoard :: Board
+                 , playerPosition :: (Int, Int)
+                 }
 
 instance Show Game where
   show game = concat boardLines
@@ -68,8 +44,4 @@ instance Show Game where
       -- [[Wall, Wall]] -> [["#", "#"]] -> [["##"]]
       board' = concatMap show <$> currentBoard game
 
-type Direction = String
-
 type Position = (Int, Int)
-
-data Terminals = Solved | Stopped | Restarted
