@@ -4,7 +4,7 @@ import Data.List  (findIndex)
 import Data.Maybe (fromJust)
 import System.IO
 
-import Sokoban.Internals.Types
+import Sokoban.Internals
 
 import Sokoban.Parse
 import Sokoban.Input
@@ -18,6 +18,8 @@ allLevels = do
   levels <- readFile "data/level1.txt"
   let lineList = lines levels
   return $ parseBoards lineList
+
+data Terminals = Solved | Restarted | Stopped
 
 runGame :: [Board] -> IO ()
 runGame []       = putStrLn "No more levels"

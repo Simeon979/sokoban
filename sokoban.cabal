@@ -17,7 +17,7 @@ executable sokoban
   hs-source-dirs:      src
   main-is:             Sokoban.hs
   other-modules:
-    Sokoban.Internals.Types
+    Sokoban.Internals
     Sokoban.Input
     Sokoban.Move
     Sokoban.Parse

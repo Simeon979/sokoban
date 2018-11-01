@@ -1,6 +1,8 @@
 module Sokoban.Move (handleMovement) where
 
-import Sokoban.Internals.Types
+import Sokoban.Internals
+
+type Direction = String
 
 getElement :: Position -> Board -> Element
 getElement (row, col) board = (board !! row) !! col

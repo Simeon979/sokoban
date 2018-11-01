@@ -4,7 +4,7 @@ module Sokoban.Parse
 
 import Data.List.Split        (endBy)
 
-import Sokoban.Internals.Types
+import Sokoban.Internals
 
 -- | Given the list of lines in a properly formatted file, parse the file
 parseBoards :: [String] -> [Board]

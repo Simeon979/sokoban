@@ -1,4 +1,4 @@
-module Sokoban.Internals.Types where
+module Sokoban.Internals where
 
 import Data.List (intersperse)
 
@@ -44,8 +44,4 @@ instance Show Game where
       -- [[Wall, Wall]] -> [["#", "#"]] -> [["##"]]
       board' = concatMap show <$> currentBoard game
 
-type Direction = String
-
 type Position = (Int, Int)
-
-data Terminals = Solved | Stopped | Restarted
