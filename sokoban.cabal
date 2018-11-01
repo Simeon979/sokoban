@@ -18,7 +18,6 @@ executable sokoban
   main-is:             Sokoban.hs
   other-modules:
     Sokoban.Internals.Types
-    Sokoban.Internals.Utils
     Sokoban.Input
     Sokoban.Move
     Sokoban.Parse

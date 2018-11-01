@@ -5,7 +5,6 @@ import Data.Maybe (fromJust)
 import System.IO
 
 import Sokoban.Internals.Types
-import Sokoban.Internals.Utils
 
 import Sokoban.Parse
 import Sokoban.Input
@@ -54,7 +53,8 @@ initLevel board = Game {currentBoard = board, playerPosition = go 0 board}
     else go (index + 1) xs
   findCol = fromJust . findIndex (\e -> e == Player || e == PlayerOnGoal)
 
-
-
+checkGameSolved :: Game -> Bool
+checkGameSolved game =
+  let board = currentBoard game in and $ fmap (notElem Box) board
 
 
